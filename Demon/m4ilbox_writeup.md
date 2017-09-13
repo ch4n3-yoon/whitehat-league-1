@@ -17,7 +17,7 @@ M4ilbox Write-Up - 출제자 풀이
 * [challenge url](http://108.61.161.168:8080/)
 
 ### 1. Functions Analyse
-> 1. 먼저 공격 벡터가 있을 만한 기능부터 봐 보자
+> 먼저 공격 벡터가 있을 만한 기능부터 봐 보자
 -   로그인 / 회원가입 기능 (아마도 SQL Injection)
 -	메일 보내기 기능
 -	중요 메일 확인, 내가 쓴 메일, 내가 받은 메일 확인 기능
@@ -29,7 +29,7 @@ M4ilbox Write-Up - 출제자 풀이
 
 공격 벡터 중에 어드민의 권한을 가져올 수 있는 방법이 있을까?
 
-> 2. admin 권한 탈취
+### 2. admin 권한 탈취
 - 일단 XSS로 admin 권한을 획득할 수 있겠고..
 - 만약에 회원가입에서 SQL Injection이 된다면 admin이라는 값을 자신의 임의대로 넣을 수도 있음ㅋㅋ
 - 근데 아무리 SQLMAP같은 퍼저를 돌려도 회원가입에서 취약점이 안나올 것이다. 
@@ -62,7 +62,7 @@ r = requests.post(url, data=data)
 print(r.text)
 ```
 
-> 3. admin 권한 획득 후 공격 진행
+### 3. admin 권한 획득 후 공격 진행
 - admin 권한을 획득하면 members 탭에서 member들을 검색할 수 있는 권한을 얻는다.
 - members에서 id를 입력하고 검색하면 해당 유저에 대한 정보들이 뜬다.
 - 근데 정보를 얻는 방식이...?
@@ -74,7 +74,7 @@ print(r.text)
     http://108.61.161.168:8080/members/search.php?search=admin&encoding=UTF-8   
 - 위의 링크로 접속해보면 **xml 형식**으로 정보를 전달하는 것을 알 수 있다. (~~코럼 행님, XXE각 나오는 부분 ㅇㅈ? ㅇㅇㅈ~~)
 
-> 4. Exploit Using XXE
+### 4. Exploit Using XXE
 - search.php 에서 검색을 할 때 **SQL Injection 취약점**이 발생한다는 것을 알 수 있다. 
 - 엌ㅋㅋㅋㅋ 그럼 **union based SQLi**를 진행하면 xml 파일 조작 가능하고 고럼 쉽게 뚫릴 것 같은뎈ㅋㅋㅋ
 - 근데 union sql injection으로 조작할 수 있는 범위는 한계가 있다. 
@@ -87,7 +87,7 @@ http://108.61.161.168:8080/members/search.php?search=%27union%09select%091,%22--
 http://108.61.161.168:8080/members/beautify.php?url=http://108.61.161.168:8080/members/search.php?search=%27union%09select%091,%22--%3E%3Cuser%3E%3Cid%3E%2526xxe;%22,3,4,5,6--%09-%26encoding=UTF-8%22?%3E%3C!DOCTYPE%20foo%20[%20%3C!ELEMENT%20foo%20ANY%20%3E%20%3C!ENTITY%20xxe%20SYSTEM%20%22file:///etc/passwd%22%20%3E]%3E%3C!--
 - 그리고 플래그는 최상위 경로에 있다고 했으니까 file:///flag 를 읽어오면 된다.
 
-> 5. Other Exploit
+### 5. Other Exploit
 - XXE를 통해서 읽기 권한이 있는 모든 파일에 접근할 수 있게 되었다. 
 - 그럼 해당 어플리케이션의 소스는 볼 수 없을까?
 - 당연히 있다. 하지만, 해당 웹 어플리케이션의 절대 경로를 알아내야 한다. ~~슈퍼게싱~~
